@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101b2d">
+<title>ElectroStock — Inventory Manager</title>
+<style>
+:root{--bg:#f3f6fb;--navy:#101b2d;--navy2:#17263d;--card:#fff;--text:#182337;--muted:#718096;--line:#e5ebf3;--blue:#2563eb;--green:#16834a;--red:#d93648;--orange:#d97706;--shadow:0 5px 22px #17263d0b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);padding-bottom:86px}
+header{background:linear-gradient(135deg,var(--navy),#1c3554);color:white;padding:18px 17px 22px;border-radius:0 0 22px 22px;position:sticky;top:0;z-index:5;box-shadow:0 5px 20px #101b2d22}
+.top{display:flex;align-items:center;gap:11px}.logo{width:43px;height:43px;border-radius:13px;background:#ffc42e;color:#142238;display:grid;place-items:center;font-size:23px;font-weight:900}.brand{font-size:20px;font-weight:800;letter-spacing:-.4px}.brand span{color:#ffc42e}.sub{font-size:12px;color:#c4d0e0;margin-top:2px}.headrow{display:flex;align-items:center;justify-content:space-between;gap:8px}.pill{font-size:11px;border:1px solid #ffffff33;padding:6px 9px;border-radius:20px;color:#e6edf6}
+main{max-width:760px;margin:0 auto;padding:16px 14px}.page{display:none}.page.active{display:block}.page-title{font-size:22px;font-weight:800;margin:3px 0 4px;letter-spacing:-.5px}.page-desc{font-size:13px;color:var(--muted);margin:0 0 16px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:14px;box-shadow:var(--shadow);min-width:0}.stat .ico{width:35px;height:35px;border-radius:11px;display:grid;place-items:center;font-size:18px;margin-bottom:12px}.stat small{display:block;color:var(--muted);font-size:12px}.stat strong{display:block;font-size:20px;margin-top:4px;letter-spacing:-.5px;overflow-wrap:anywhere}.blue{background:#eaf2ff;color:#2563eb}.green{background:#e6f7ee;color:#16834a}.amber{background:#fff3d9;color:#b96b00}.red{background:#ffe9ec;color:#d93648}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin:22px 0 10px}.section-head h3{font-size:16px;margin:0}.muted{color:var(--muted);font-size:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:14px;box-shadow:var(--shadow);margin-bottom:12px}.quick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.btn{border:0;border-radius:12px;padding:12px 14px;font:inherit;font-size:13px;font-weight:750;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:43px}.btn-primary{background:var(--blue);color:#fff}.btn-dark{background:var(--navy);color:white}.btn-light{background:#eef3fa;color:#26344a}.btn-danger{background:#fff0f1;color:var(--red)}.btn-green{background:var(--green);color:#fff}.btn-sm{min-height:34px;padding:8px 10px;font-size:12px}.btn:active{transform:scale(.98)}.full{width:100%}
+label{display:block;font-size:12px;font-weight:700;margin:0 0 6px;color:#344258}input,select,textarea{font:inherit;width:100%;border:1px solid #d9e1ec;border-radius:11px;padding:12px;background:#fff;color:var(--text);outline:none;min-height:44px}input:focus,select:focus,textarea:focus{border-color:#6a99ff;box-shadow:0 0 0 3px #2563eb14}.field{margin-bottom:13px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.search{margin-bottom:12px}.item{display:flex;gap:11px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.item:last-child{border-bottom:0}.item-icon{flex-shrink:0;width:42px;height:42px;border-radius:12px;background:#edf3fb;display:grid;place-items:center;font-size:20px}.item-main{min-width:0;flex:1}.item-title{font-size:14px;font-weight:750;overflow-wrap:anywhere}.item-sub{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.4}.item-right{text-align:right;flex-shrink:0}.price{font-size:13px;font-weight:800}.tag{display:inline-block;font-size:10px;padding:4px 7px;border-radius:20px;font-weight:800;margin-top:5px}.tag.ok{background:#e4f7eb;color:#137943}.tag.low{background:#fff1d7;color:#a95f00}.tag.out{background:#ffe8eb;color:#be2738}.empty{text-align:center;color:var(--muted);padding:26px 10px;font-size:13px}.empty b{display:block;font-size:26px;margin-bottom:8px}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:8;background:#fff;border-top:1px solid var(--line);padding:7px 5px calc(7px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(5,1fr);box-shadow:0 -7px 24px #14243b0c}nav button{border:0;background:transparent;color:#8190a4;font:inherit;font-size:10px;font-weight:700;padding:5px 1px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;border-radius:10px}nav button span{font-size:20px;line-height:1.1}nav button.active{color:var(--blue);background:#edf4ff}
+.notice{font-size:12px;line-height:1.5;background:#eaf3ff;color:#2457a7;padding:11px 12px;border-radius:12px;margin:12px 0}.notice.warn{background:#fff4df;color:#8a5600}.notice.success{background:#e6f7ee;color:#176b3e}.inline-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.summary-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;font-size:13px}.summary-row b{font-variant-numeric:tabular-nums}.divider{height:1px;background:var(--line);margin:8px 0}.transaction{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}.transaction:last-child{border-bottom:0}.transaction strong{font-size:13px}.transaction small{display:block;color:var(--muted);font-size:11px;margin-top:4px}.positive{color:var(--green)}.negative{color:var(--red)}.hidden{display:none!important}.foot{text-align:center;color:#8a96a8;font-size:11px;padding:16px 0}
+@media(min-width:600px){main{padding:22px}.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.stat strong{font-size:21px}.quick{grid-template-columns:repeat(4,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<header>
+ <div class="headrow"><div class="top"><div class="logo">▦</div><div><div class="brand">Electro<span>Stock</span></div><div class="sub">Smart stock management</div></div></div><div class="pill">₹ INR</div></div>
+</header>
+<main>
+<section class="page active" id="page-home">
+ <div class="page-title">Your dashboard</div><p class="page-desc">A clear picture of your shop, at a glance.</p>
+ <div class="grid">
+  <div class="stat"><div class="ico blue">▦</div><small>Products</small><strong id="stat-products">0</strong></div>
+  <div class="stat"><div class="ico green">▤</div><small>Units in stock</small><strong id="stat-units">0</strong></div>
+  <div class="stat"><div class="ico amber">₹</div><small>Stock value (cost)</small><strong id="stat-value">₹0</strong></div>
+  <div class="stat"><div class="ico red">⚠</div><small>Low / out of stock</small><strong id="stat-low">0</strong></div>
+ </div>
+ <div class="section-head"><h3>Quick actions</h3></div>
+ <div class="quick">
+  <button class="btn btn-primary" onclick="openProductForm()">＋ Add product</button>
+  <button class="btn btn-light" onclick="showPage('purchases')">↗ Record purchase</button>
+  <button class="btn btn-light" onclick="showPage('sales')">↙ Record sale</button>
+  <button class="btn btn-dark" onclick="showPage('profit')">₹ View profit</button>
+ </div>
+ <div class="section-head"><h3>Low stock</h3><button class="btn btn-light btn-sm" onclick="showPage('stock')">View all</button></div>
+ <div class="card" id="home-low"></div>
+ <div class="section-head"><h3>Recent activity</h3></div><div class="card" id="home-recent"></div>
+ <div class="notice">Your records are saved in this browser on this device. Use <b>More → Backup data</b> regularly to keep a copy.</div>
+</section>
+
+<section class="page" id="page-stock">
+ <div class="page-title">Stock</div><p class="page-desc">See and manage the products in your shop.</p>
+ <button class="btn btn-primary full" onclick="openProductForm()">＋ Add new product</button>
+ <div class="field search" style="margin-top:12px"><input id="stock-search" placeholder="Search name, brand or category…" oninput="renderStock()"></div>
+ <div class="card" id="stock-list"></div>
+</section>
+
+<section class="page" id="page-purchases">
+ <div class="page-title">Purchases</div><p class="page-desc">Record stock received from suppliers.</p>
+ <div class="card">
+  <form id="purchase-form">
+   <div class="field"><label for="purchase-product">Product *</label><select id="purchase-product" required></select></div>
+   <div class="form-grid"><div class="field"><label for="purchase-qty">Quantity *</label><input id="purchase-qty" type="number" min="1" step="1" required placeholder="e.g. 20"></div><div class="field"><label for="purchase-cost">Cost per item (₹) *</label><input id="purchase-cost" type="number" min="0" step="0.01" required placeholder="e.g. 85"></div></div>
+   <div class="field"><label for="purchase-supplier">Supplier (optional)</label><input id="purchase-supplier" placeholder="Supplier name"></div>
+   <div class="field"><label for="purchase-date">Date *</label><input id="purchase-date" type="date" required></div>
+   <div class="notice" id="purchase-total">Purchase total: ₹0</div>
+   <button class="btn btn-primary full" type="submit">Save purchase</button>
+  </form>
+ </div>
+ <div class="section-head"><h3>Purchase history</h3></div><div class="card" id="purchase-history"></div>
+</section>
+
+<section class="page" id="page-sales">
+ <div class="page-title">Sales</div><p class="page-desc">Record sales and update stock automatically.</p>
+ <div class="card">
+  <form id="sale-form">
+   <div class="field"><label for="sale-product">Product *</label><select id="sale-product" required></select></div>
+   <div class="form-grid"><div class="field"><label for="sale-qty">Quantity *</label><input id="sale-qty" type="number" min="1" step="1" required placeholder="e.g. 2"></div><div class="field"><label for="sale-price">Selling price per item (₹) *</label><input id="sale-price" type="number" min="0" step="0.01" required placeholder="e.g. 120"></div></div>
+   <div class="field"><label for="sale-customer">Customer (optional)</label><input id="sale-customer" placeholder="Customer name / note"></div>
+   <div class="field"><label for="sale-date">Date *</label><input id="sale-date" type="date" required></div>
+   <div class="notice" id="sale-total">Sale total: ₹0</div>
+   <button class="btn btn-green full" type="submit">Save sale</button>
+  </form>
+ </div>
+ <div class="section-head"><h3>Sales history</h3></div><div class="card" id="sale-history"></div>
+</section>
+
+<section class="page" id="page-profit">
+ <div class="page-title">Profit & reports</div><p class="page-desc">Understand sales, purchase costs and estimated gross profit.</p>
+ <div class="grid">
+  <div class="stat"><div class="ico green">↗</div><small>Total sales</small><strong id="profit-sales">₹0</strong></div>
+  <div class="stat"><div class="ico blue">▤</div><small>Cost of items sold</small><strong id="profit-cogs">₹0</strong></div>
+  <div class="stat"><div class="ico amber">₹</div><small>Gross profit</small><strong id="profit-gross">₹0</strong></div>
+  <div class="stat"><div class="ico red">%</div><small>Gross margin</small><strong id="profit-margin">0%</strong></div>
+ </div>
+ <div class="card" style="margin-top:12px"><h3 style="margin:0 0 8px;font-size:15px">How profit is calculated</h3><div class="summary-row"><span>Sales revenue</span><b id="formula-sales">₹0</b></div><div class="summary-row"><span>Less: cost of goods sold</span><b id="formula-cogs">₹0</b></div><div class="divider"></div><div class="summary-row"><strong>Estimated gross profit</strong><b class="positive" id="formula-profit">₹0</b></div><div class="muted">This is gross profit before rent, wages, electricity, taxes, discounts and other expenses. Historical sales use the cost recorded when the sale was made.</div></div>
+ <div class="section-head"><h3>Sales by day</h3></div><div class="card" id="daily-report"></div>
+ <div class="section-head"><h3>Best-selling products</h3></div><div class="card" id="top-products"></div>
+</section>
+
+<section class="page" id="page-more">
+ <div class="page-title">More</div><p class="page-desc">Backup, restore and manage your records.</p>
+ <div class="card">
+  <h3 style="margin:0 0 5px;font-size:15px">Data backup</h3><p class="muted">Export your products, purchases and sales to a JSON file. Keep it somewhere safe.</p>
+  <button class="btn btn-primary full" onclick="exportBackup()">↓ Download backup</button>
+  <div class="divider" style="margin:14px 0"></div>
+  <label for="restore-file">Restore from a backup file</label><input id="restore-file" type="file" accept=".json,application/json">
+  <button class="btn btn-light full" style="margin-top:8px" onclick="restoreBackup()">↑ Restore backup</button>
+  <div class="notice warn">Restoring replaces the records currently saved in this browser. Export a backup first.</div>
+ </div>
+ <div class="card">
+  <h3 style="margin:0 0 5px;font-size:15px">Shop settings</h3>
+  <div class="field"><label for="shop-name">Shop name</label><input id="shop-name" value="ElectroStock"></div>
+  <button class="btn btn-light full" onclick="saveSettings()">Save shop name</button>
+ </div>
+ <div class="card">
+  <h3 style="margin:0 0 5px;font-size:15px">Privacy & storage</h3>
+  <p class="muted">Data stays in this browser's local storage. It is not automatically synced to another phone and may be lost if browser data is cleared, the app is uninstalled, or the device is reset.</p>
+  <button class="btn btn-danger full" onclick="clearAllData()">Delete all shop data</button>
+ </div>
+ <div class="foot">ElectroStock · Version 1.0 · Made for small Indian electrical shops</div>
+</section>
+</main>
+<nav>
+ <button class="active" data-page="home" onclick="showPage('home')"><span>⌂</span>Home</button>
+ <button data-page="stock" onclick="showPage('stock')"><span>▦</span>Stock</button>
+ <button data-page="purchases" onclick="showPage('purchases')"><span>↗</span>Purchases</button>
+ <button data-page="sales" onclick="showPage('sales')"><span>↙</span>Sales</button>
+ <button data-page="more" onclick="showPage('more')"><span>•••</span>More</button>
+</nav>
+
+<div id="product-modal" class="hidden" style="position:fixed;inset:0;background:#07132699;z-index:20;overflow:auto;padding:18px 12px">
+ <div style="max-width:540px;margin:18px auto;background:#fff;border-radius:20px;padding:18px;box-shadow:0 20px 60px #0003">
+  <div class="headrow" style="margin-bottom:16px"><div><div class="page-title" id="product-form-title" style="font-size:19px">Add product</div><div class="muted">Fields marked * are required</div></div><button class="btn btn-light btn-sm" onclick="closeProductForm()">✕ Close</button></div>
+  <form id="product-form">
+   <input id="product-id" type="hidden">
+   <div class="field"><label for="product-name">Product name *</label><input id="product-name" required placeholder="e.g. LED Bulb 9W"></div>
+   <div class="form-grid"><div class="field"><label for="product-category">Category *</label><select id="product-category" required><option>Lighting</option><option>Wires & Cables</option><option>Switches & Sockets</option><option>Fans</option><option>Electrical Accessories</option><option>Mobile Accessories</option><option>Audio</option><option>Appliances</option><option>Other</option></select></div><div class="field"><label for="product-brand">Brand</label><input id="product-brand" placeholder="e.g. Philips"></div></div>
+   <div class="field"><label for="product-sku">SKU / item code</label><input id="product-sku" placeholder="Optional code"></div>
+   <div class="form-grid"><div class="field"><label for="product-cost">Purchase cost per item (₹) *</label><input id="product-cost" type="number" min="0" step="0.01" required placeholder="0.00"></div><div class="field"><label for="product-price">Selling price per item (₹) *</label><input id="product-price" type="number" min="0" step="0.01" required placeholder="0.00"></div></div>
+   <div class="form-grid"><div class="field"><label for="product-stock">Opening stock *</label><input id="product-stock" type="number" min="0" step="1" required value="0"></div><div class="field"><label for="product-low">Low-stock alert at</label><input id="product-low" type="number" min="0" step="1" value="5"></div></div>
+   <button class="btn btn-primary full" type="submit">Save product</button>
+  </form>
+ </div>
+</div>
+<script>
+const KEY='electrostock_v1';
+let db={products:[],purchases:[],sales:[],settings:{shopName:'ElectroStock'}};
+const $=id=>document.getElementById(id);
+const money=n=>new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:2}).format(Number(n)||0);
+const num=n=>Number(n)||0;
+const today=()=>new Date().toLocaleDateString('en-CA');
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY)||'null');if(x&&Array.isArray(x.products)&&Array.isArray(x.purchases)&&Array.isArray(x.sales))db={...db,...x,settings:{...db.settings,...x.settings}}}catch(e){alert('Saved data could not be read. Use a backup if you have one.')} }
+function save(){try{localStorage.setItem(KEY,JSON.stringify(db));return true}catch(e){alert('Could not save data. Your browser storage may be full or disabled. Export a backup if possible.');return false}}
+function showPage(p){document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active',el.id==='page-'+p));document.querySelectorAll('nav button').forEach(el=>el.classList.toggle('active',el.dataset.page===p));if(p==='stock')renderStock();if(p==='purchases')renderPurchases();if(p==='sales')renderSales();if(p==='profit')renderProfit();window.scrollTo({top:0,behavior:'smooth'})}
+function productById(id){return db.products.find(p=>p.id===id)}
+function totalStock(p){return num(p.stock)}
+function badge(p){return p.stock<=0?'<span class="tag out">Out of stock</span>':p.stock<=num(p.low)?'<span class="tag low">Low stock</span>':'<span class="tag ok">In stock</span>'}
+function empty(msg){return '<div class="empty"><b>▦</b>'+safe(msg)+'</div>'}
+function refreshAll(){save();renderHome();fillProductSelects();renderStock();renderPurchases();renderSales();renderProfit();$('shop-name').value=db.settings.shopName||'ElectroStock';document.title=(db.settings.shopName||'ElectroStock')+' — Inventory Manager';document.querySelector('.brand').innerHTML=safe(db.settings.shopName||'ElectroStock').replace(/Stock/i,'<span>Stock</span>')}
+function renderHome(){
+ const units=db.products.reduce((s,p)=>s+num(p.stock),0),low=db.products.filter(p=>num(p.stock)<=num(p.low)).length,value=db.products.reduce((s,p)=>s+num(p.stock)*num(p.cost),0);
+ $('stat-products').textContent=db.products.length;$('stat-units').textContent=units.toLocaleString('en-IN');$('stat-value').textContent=money(value);$('stat-low').textContent=low;
+ const lows=db.products.filter(p=>num(p.stock)<=num(p.low)).slice(0,5);
+ $('home-low').innerHTML=lows.length?lows.map(p=>`<div class="item"><div class="item-icon">▦</div><div class="item-main"><div class="item-title">${safe(p.name)}</div><div class="item-sub">${safe(p.category)} · ${p.stock} left</div></div><div class="item-right">${badge(p)}</div></div>`).join(''):empty('No low-stock products. Add your products to get started.');
+ const acts=[...db.sales.map(x=>({...x,kind:'Sale',label:productById(x.productId)?.name||'Deleted product',amount:x.total})),...db.purchases.map(x=>({...x,kind:'Purchase',label:productById(x.productId)?.name||'Deleted product',amount:x.total}))].sort((a,b)=>(b.createdAt||b.date||'').localeCompare(a.createdAt||a.date||'')).slice(0,5);
+ $('home-recent').innerHTML=acts.length?acts.map(x=>`<div class="transaction"><div><strong>${safe(x.kind)} · ${safe(x.label)}</strong><small>${safe(x.date)} · ${x.qty} unit(s)</small></div><b class="${x.kind==='Sale'?'positive':''}">${money(x.amount)}</b></div>`).join(''):empty('Purchases and sales will appear here.');
+}
+function renderStock(){const q=($('stock-search')?.value||'').trim().toLowerCase();let list=db.products.filter(p=>[p.name,p.brand,p.category,p.sku].join(' ').toLowerCase().includes(q));$('stock-list').innerHTML=list.length?list.map(p=>`<div class="item"><div class="item-icon">▦</div><div class="item-main"><div class="item-title">${safe(p.name)}</div><div class="item-sub">${safe(p.brand||p.category)}${p.sku?' · '+safe(p.sku):''}<br>Cost ${money(p.cost)} · Sell ${money(p.price)}<br>${p.stock} unit(s) ${badge(p)}</div><div class="inline-actions"><button class="btn btn-light btn-sm" onclick="editProduct('${p.id}')">Edit</button><button class="btn btn-danger btn-sm" onclick="deleteProduct('${p.id}')">Delete</button></div></div><div class="item-right"><div class="price">${money(num(p.stock)*num(p.cost))}</div><small class="muted">stock value</small></div></div>`).join(''):empty(q?'No matching products.':'No products yet. Tap “Add new product” to start.')}
+function openProductForm(){ $('product-form').reset();$('product-id').value='';$('product-stock').value='0';$('product-low').value='5';$('product-form-title').textContent='Add product';$('product-modal').classList.remove('hidden')}
+function closeProductForm(){$('product-modal').classList.add('hidden')}
+function editProduct(id){const p=productById(id);if(!p)return;$('product-id').value=p.id;$('product-name').value=p.name;$('product-category').value=p.category;$('product-brand').value=p.brand||'';$('product-sku').value=p.sku||'';$('product-cost').value=p.cost;$('product-price').value=p.price;$('product-stock').value=p.stock;$('product-low').value=p.low??5;$('product-form-title').textContent='Edit product';$('product-modal').classList.remove('hidden')}
+function deleteProduct(id){const p=productById(id);if(!p)return;if(db.purchases.some(x=>x.productId===id)||db.sales.some(x=>x.productId===id)){alert('This product has purchase or sales history. It cannot be deleted safely. You can edit its name or leave it in the list.');return}if(confirm('Delete '+p.name+'?')){db.products=db.products.filter(x=>x.id!==id);refreshAll()}}
+$('product-form').addEventListener('submit',e=>{e.preventDefault();const id=$('product-id').value,stock=num($('product-stock').value),p={id:id||uid(),name:$('product-name').value.trim(),category:$('product-category').value,brand:$('product-brand').value.trim(),sku:$('product-sku').value.trim(),cost:num($('product-cost').value),price:num($('product-price').value),stock,low:num($('product-low').value)};if(!p.name)return alert('Enter a product name.');if(id){const old=productById(id);if(old){p.stock=stock;Object.assign(old,p)}}else db.products.push(p);closeProductForm();refreshAll();showPage('stock')});
+function fillProductSelects(){for(const id of ['purchase-product','sale-product']){const sel=$(id),old=sel.value;sel.innerHTML='<option value="">Choose a product…</option>'+db.products.map(p=>`<option value="${p.id}">${safe(p.name)} — ${p.stock} in stock</option>`).join('');if(productById(old))sel.value=old}}
+function setDefaultDates(){['purchase-date','sale-date'].forEach(id=>$(id).value=today())}
+function updateTotals(){const pq= num($('purchase-qty').value),pc=num($('purchase-cost').value),sq=num($('sale-qty').value),sp=num($('sale-price').value);$('purchase-total').textContent='Purchase total: '+money(pq*pc);$('sale-total').textContent='Sale total: '+money(sq*sp);const p=productById($('purchase-product').value),s=productById($('sale-product').value);if(p&&(!$('purchase-cost').value||$('purchase-cost').value==='0'))$('purchase-cost').value=p.cost;if(s&&(!$('sale-price').value||$('sale-price').value==='0'))$('sale-price').value=p.price}
+['purchase-qty','purchase-cost','sale-qty','sale-price','purchase-product','sale-product'].forEach(id=>$(id).addEventListener('input',updateTotals));
+$('purchase-product').addEventListener('change',()=>{const p=productById($('purchase-product').value);if(p)$('purchase-cost').value=p.cost;updateTotals()});
+$('sale-product').addEventListener('change',()=>{const p=productById($('sale-product').value);if(p)$('sale-price').value=p.price;updateTotals()});
+$('purchase-form').addEventListener('submit',e=>{e.preventDefault();const p=productById($('purchase-product').value),qty=num($('purchase-qty').value),cost=num($('purchase-cost').value);if(!p)return alert('Choose a product.');if(qty<1||!Number.isInteger(qty))return alert('Quantity must be a whole number greater than zero.');if(cost<0)return alert('Cost cannot be negative.');const rec={id:uid(),productId:p.id,qty,cost,total:qty*cost,supplier:$('purchase-supplier').value.trim(),date:$('purchase-date').value,createdAt:new Date().toISOString()};p.stock+=qty;p.cost=cost;db.purchases.unshift(rec);$('purchase-form').reset();setDefaultDates();refreshAll();alert('Purchase saved. Stock has been updated.')});
+$('sale-form').addEventListener('submit',e=>{e.preventDefault();const p=productById($('sale-product').value),qty=num($('sale-qty').value),price=num($('sale-price').value);if(!p)return alert('Choose a product.');if(qty<1||!Number.isInteger(qty))return alert('Quantity must be a whole number greater than zero.');if(qty>p.stock)return alert('Not enough stock. Available quantity: '+p.stock);if(price<0)return alert('Price cannot be negative.');const rec={id:uid(),productId:p.id,qty,price,costAtSale:num(p.cost),total:qty*price,costTotal:qty*num(p.cost),grossProfit:qty*(price-num(p.cost)),customer:$('sale-customer').value.trim(),date:$('sale-date').value,createdAt:new Date().toISOString()};p.stock-=qty;db.sales.unshift(rec);$('sale-form').reset();setDefaultDates();refreshAll();alert('Sale saved. Stock has been updated.')});
+function renderPurchases(){const list=db.purchases;$('purchase-history').innerHTML=list.length?list.slice(0,100).map(x=>`<div class="transaction"><div><strong>${safe(productById(x.productId)?.name||'Deleted product')}</strong><small>${safe(x.date)} · ${x.qty} unit(s)${x.supplier?' · '+safe(x.supplier):''}<br>${money(x.cost)} per item</small></div><b>${money(x.total)}</b></div>`).join(''):empty('No purchases recorded yet.')}
+function renderSales(){const list=db.sales;$('sale-history').innerHTML=list.length?list.slice(0,100).map(x=>`<div class="transaction"><div><strong>${safe(productById(x.productId)?.name||'Deleted product')}</strong><small>${safe(x.date)} · ${x.qty} unit(s)${x.customer?' · '+safe(x.customer):''}<br>Gross profit: <span class="${x.grossProfit>=0?'positive':'negative'}">${money(x.grossProfit??(x.total-x.costTotal))}</span></small></div><b>${money(x.total)}</b></div>`).join(''):empty('No sales recorded yet.')}
+function renderProfit(){const sales=db.sales.reduce((s,x)=>s+num(x.total),0),cogs=db.sales.reduce((s,x)=>s+num(x.costTotal??(x.qty*num(x.costAtSale))),0),gross=sales-cogs,margin=sales?gross/sales*100:0;$('profit-sales').textContent=money(sales);$('profit-cogs').textContent=money(cogs);$('profit-gross').textContent=money(gross);$('profit-margin').textContent=margin.toFixed(1)+'%';$('formula-sales').textContent=money(sales);$('formula-cogs').textContent='− '+money(cogs);$('formula-profit').textContent=money(gross);
+ const byDate={};db.sales.forEach(x=>{byDate[x.date]??={sales:0,profit:0,qty:0};byDate[x.date].sales+=num(x.total);byDate[x.date].profit+=num(x.grossProfit??(x.total-x.costTotal));byDate[x.date].qty+=num(x.qty)});const days=Object.entries(byDate).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,10);$('daily-report').innerHTML=days.length?days.map(([d,v])=>`<div class="transaction"><div><strong>${safe(d)}</strong><small>${v.qty} item(s) sold · Profit ${money(v.profit)}</small></div><b>${money(v.sales)}</b></div>`).join(''):empty('Your daily sales report will appear here.');
+ const tops={};db.sales.forEach(x=>{const p=productById(x.productId),name=p?.name||'Deleted product';tops[name]??={qty:0,sales:0};tops[name].qty+=num(x.qty);tops[name].sales+=num(x.total)});const top=Object.entries(tops).sort((a,b)=>b[1].qty-a[1].qty).slice(0,8);$('top-products').innerHTML=top.length?top.map(([name,v],i)=>`<div class="transaction"><div><strong>${i+1}. ${safe(name)}</strong><small>${v.qty} unit(s) sold</small></div><b>${money(v.sales)}</b></div>`).join(''):empty('Best sellers will appear after you record sales.')}
+function exportBackup(){const blob=new Blob([JSON.stringify({...db,exportedAt:new Date().toISOString(),app:'ElectroStock'},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='electrostock-backup-'+today()+'.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
+function restoreBackup(){const file=$('restore-file').files[0];if(!file)return alert('Choose a JSON backup file first.');const reader=new FileReader();reader.onload=()=>{try{const x=JSON.parse(reader.result);if(!Array.isArray(x.products)||!Array.isArray(x.purchases)||!Array.isArray(x.sales))throw new Error('Invalid backup');if(!confirm('Replace current records with this backup?'))return;db={products:x.products,purchases:x.purchases,sales:x.sales,settings:{shopName:x.settings?.shopName||'ElectroStock'}};refreshAll();alert('Backup restored.')}catch(e){alert('That file does not look like a valid ElectroStock backup.')}};reader.readAsText(file)}
+function saveSettings(){db.settings.shopName=$('shop-name').value.trim()||'ElectroStock';refreshAll();alert('Shop name saved.')}
+function clearAllData(){if(!confirm('Delete ALL products, purchases and sales from this browser? This cannot be undone unless you have a backup.'))return;if(!confirm('Please confirm one more time: permanently delete all ElectroStock data?'))return;db={products:[],purchases:[],sales:[],settings:{shopName:$('shop-name').value.trim()||'ElectroStock'}};refreshAll();alert('All shop data deleted.')}
+load();setDefaultDates();refreshAll();
+</script>
+</body>
+</html>
